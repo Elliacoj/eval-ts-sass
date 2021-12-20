@@ -3,7 +3,7 @@ export {Task};
 class Task {
     public name: string;
     public time: number;
-    public date: Date;
+    public date: string;
 
     /**
      * Constructor
@@ -11,7 +11,7 @@ class Task {
      * @param time
      * @param date
      */
-    constructor(name:string, time:number, date: Date) {
+    constructor(name:string, time:number = 0, date: string =(new Date()).toLocaleDateString()) {
         this.name = name;
         this.time = time;
         this.date = date;
@@ -37,7 +37,7 @@ class Task {
      * Set the date of task
      * @param date
      */
-    setDateTask(date:Date) {
+    setDateTask(date:string) {
         this.date = date;
     }
 }

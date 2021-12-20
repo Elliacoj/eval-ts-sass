@@ -13,7 +13,7 @@ class Project {
      * @param date
      * @param task
      */
-    constructor(time:number = 0, date:number = 0, task: Task[] = []) {
+    constructor(time:number = 0, date:number = 0, task:Task[] = []) {
         this.time = time;
         this.date = date;
         this.task = task;
@@ -47,7 +47,13 @@ class Project {
      * @param task
      */
     addTask(task:Task) {
-        this.task.push(task);
+        if(this.task.length > 0) {
+            this.task.push(task);
+        }
+        else {
+            this.task = [task];
+        }
+
     }
 
     /**

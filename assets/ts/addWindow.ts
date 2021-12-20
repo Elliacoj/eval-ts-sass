@@ -2,6 +2,8 @@ export {AddWindow};
 
 // @ts-ignore
 import {Project} from "./Project.ts";
+// @ts-ignore
+import {Task} from "./Task.ts";
 
 class AddWindow {
     public divContainer: HTMLElement;
@@ -9,6 +11,7 @@ class AddWindow {
     public input: HTMLInputElement;
     public buttonAdd: HTMLElement;
     public buttonReturn: HTMLElement;
+    public spanError: HTMLElement;
 
     /**
      * Constructor
@@ -19,20 +22,29 @@ class AddWindow {
         this.input = document.createElement("input");
         this.buttonAdd = document.createElement("button");
         this.buttonReturn = document.createElement("button");
+        this.spanError = document.createElement("span");
     }
 
     /**
      * Init the add window
      */
-    init() {
-        this.title.innerHTML = "Nommer le projet";
-        this.buttonAdd.innerHTML = "Ajouter";
+    async init(choice:number, nameWindow:string, name:string = "", project:object|null = null, element:HTMLElement|null = null) {
+        this.divContainer.innerHTML = "";
         this.buttonReturn.innerHTML = "Retour";
+        this.buttonAdd.id = "addButton";
+        this.divContainer.appendChild(this.title);
+        if(choice === 0) {
+            this.addProject(nameWindow);
+        }
+        else if(choice === 1) {
+            this.addTask(nameWindow, project, name);
+        }
+        else if(choice === 2) {
+            this.deleteProject(nameWindow, name, element!);
+        }
 
-        this.divContainer.appendChild(this.title);
-        this.divContainer.appendChild(this.title);
-        this.divContainer.appendChild(this.input);
         this.divContainer.appendChild(this.buttonAdd);
+        this.divContainer.appendChild(this.spanError);
         this.divContainer.appendChild(this.buttonReturn);
 
         this.divContainer.id = "addWindow";
@@ -40,7 +52,46 @@ class AddWindow {
         document.body.appendChild(this.divContainer);
 
         this.returnAction();
-        this.addAction();
+    }
+
+    /**
+     * Content for add project
+     * @param name
+     */
+    addProject(name:string) {
+        this.title.innerHTML = name;
+        this.buttonAdd.innerHTML = "Ajouter";
+        this.divContainer.appendChild(this.input);
+        this.confirmProject();
+    }
+
+    /**
+     * Content for add task
+     * @param nameWindow
+     * @param project
+     * @param name
+     */
+    addTask(nameWindow:string, project:Project, name:string) {
+        this.title.innerHTML = nameWindow;
+        this.buttonAdd.innerHTML = "Ajouter";
+        this.divContainer.appendChild(this.input);
+        this.confirmTask(project, name)
+    }
+
+    /**
+     * Content for delete project
+     * @param nameWindow
+     * @param remove
+     * @param element
+     */
+    deleteProject(nameWindow:string, remove:string, element:HTMLElement) {
+        this.title.innerHTML = nameWindow;
+        this.buttonAdd.innerHTML = "Supprimer";
+        this.buttonAdd.addEventListener("click", () => {
+            localStorage.removeItem(remove);
+            element.remove();
+            this.divContainer.remove();
+        });
     }
 
     /**
@@ -55,12 +106,30 @@ class AddWindow {
     /**
      * Add a project into local storage
      */
-    addAction() {
+    confirmProject() {
         this.buttonAdd.addEventListener("click", () => {
-            if(this.input.value !== "") {
+            if(this.input.value !== "" && !localStorage.getItem(this.input.value)) {
                 let newProject: Project = new Project();
                 localStorage.setItem(this.input.value, JSON.stringify(newProject));
+                this.divContainer.remove();
+            }
+            else {
+                this.spanError.innerHTML = "Nom déjà pris!"
+            }
+        });
+    }
 
+    /**
+     * Add a task into local storage
+     */
+    confirmTask(project:Project, name:string) {
+        this.buttonAdd.addEventListener("click", () => {
+            if(this.input.value !== "") {
+                let newProject:Project = new Project(project.time, project.date, project.task);
+                let task:Task = new Task(this.input.value)
+
+                newProject.addTask(task);
+                localStorage.setItem(name, JSON.stringify(newProject));
                 this.divContainer.remove();
             }
         });

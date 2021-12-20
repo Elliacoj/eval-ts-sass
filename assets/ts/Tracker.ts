@@ -1,16 +1,20 @@
-import {Project} from "./Project";
-
 export {Tracker};
 
 import "@fortawesome/fontawesome-free/js/all.js";
-/*import {Project} from "./Project.ts";
-import {Task} from "./Task.ts";*/
+// @ts-ignore
+import {Project} from "./Project.ts";
+
+// @ts-ignore
+import {AddWindow} from "./addWindow.ts";
+
+// @ts-ignore
+import {Chrono} from "./Chrono.ts";
 
 class Tracker{
-    public trackerArray: string[];
+    public addWindow: AddWindow;
 
     constructor() {
-        this.trackerArray = [];
+        this.addWindow = new AddWindow();
     }
 
     /**
@@ -90,5 +94,68 @@ class Tracker{
         divBottom.appendChild(addButton);
         contentDiv.appendChild(listDiv);
         container.appendChild(contentDiv)
+        this.listTaskContent(listDiv, value);
+        this.addTask(value, addButton, key, listDiv);
+        this.deleteProject(key, deleteButton, contentDiv);
+    }
+
+    /**
+     * Add content list into content div
+     * @param divContainer
+     * @param value
+     */
+    listTaskContent(divContainer: HTMLElement, value:Project) {
+        if(value.task.length !== 0) {
+            for(let x:number = 0; x < value.task.length; x++) {
+                let chrono = new Chrono(value.task[x].time);
+                let divContent: HTMLElement = document.createElement("div");
+                let divTitle:HTMLElement = document.createElement("div");
+                let divTimer:HTMLElement = document.createElement("div");
+                let timer:HTMLElement = document.createElement("i");
+
+                divTimer.dataset.time = "0";
+                timer.className = "far fa-clock";
+                divTitle.innerHTML = value.task[x].name;
+
+                divContent.appendChild(divTitle);
+                divContent.appendChild(divTimer);
+                divTimer.appendChild(timer);
+                divContainer.appendChild(divContent);
+                divTimer.addEventListener("click", () => {
+                    chrono.chronoStart(divTimer);
+                })
+            }
+        }
+    }
+
+    /**
+     * Open a window for add task
+     * @param value
+     * @param button
+     * @param name
+     * @param divList
+     */
+    addTask(value:Project, button:HTMLElement, name:string, divList:HTMLElement) {
+        button.addEventListener("click", () => {
+            this.addWindow.init(1, "Nommer la tâche", name, value).then(() => {
+                document.getElementById("addButton")!.addEventListener("click", () => {
+                    divList.innerHTML = "";
+                    let project:Project = new Project()
+                    this.listTaskContent(divList, JSON.parse(localStorage.getItem(name)!));
+                })
+            })
+        });
+    }
+
+    /**
+     * Delete a project
+     * @param name
+     * @param button
+     * @param remove
+     */
+    deleteProject(name:string, button:HTMLElement, remove:HTMLElement) {
+        button.addEventListener("click", ()=> {
+            this.addWindow.init(2, "Supprimer le project?", name, null, remove).then();
+        });
     }
 }
