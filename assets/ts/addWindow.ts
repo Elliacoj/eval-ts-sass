@@ -1,9 +1,12 @@
 export {AddWindow};
 
+// @ts-ignore
+import {Project} from "./Project.ts";
+
 class AddWindow {
     public divContainer: HTMLElement;
     public title: HTMLElement;
-    public input: HTMLElement;
+    public input: HTMLInputElement;
     public buttonAdd: HTMLElement;
     public buttonReturn: HTMLElement;
 
@@ -37,6 +40,7 @@ class AddWindow {
         document.body.appendChild(this.divContainer);
 
         this.returnAction();
+        this.addAction();
     }
 
     /**
@@ -46,5 +50,19 @@ class AddWindow {
         this.buttonReturn.addEventListener("click", () => {
             this.divContainer.remove();
         })
+    }
+
+    /**
+     * Add a project into local storage
+     */
+    addAction() {
+        this.buttonAdd.addEventListener("click", () => {
+            if(this.input.value !== "") {
+                let newProject: Project = new Project();
+                localStorage.setItem(this.input.value, JSON.stringify(newProject));
+
+                this.divContainer.remove();
+            }
+        });
     }
 }

@@ -1,6 +1,10 @@
+import {Project} from "./Project";
+
 export {Tracker};
 
 import "@fortawesome/fontawesome-free/js/all.js";
+/*import {Project} from "./Project.ts";
+import {Task} from "./Task.ts";*/
 
 class Tracker{
     public trackerArray: string[];
@@ -27,8 +31,8 @@ class Tracker{
                 let key = localStorage.key(x) as string;
                 if((localStorage.getItem(key)!).indexOf("Project:")) {
                     // @ts-ignore
-                    let value:(string)[] = localStorage.getItem(key).split(";");
-                    key = key.substr(key.indexOf(" "));
+                    let value:Project = JSON.parse(localStorage.getItem(key));
+
                     this.trackerConstructor(container, key, value);
                 }
             }
@@ -41,7 +45,7 @@ class Tracker{
      * @param key
      * @param value
      */
-    trackerConstructor(container:HTMLElement, key:string, value:(string)[] = ["0","0"]) {
+    trackerConstructor(container:HTMLElement, key:string, value:Project) {
         let contentDiv: HTMLElement = document.createElement("div");
         let divLeft: HTMLElement = document.createElement("div");
         let divUp:HTMLElement = document.createElement("div");
@@ -59,8 +63,11 @@ class Tracker{
         let listDiv: HTMLElement = document.createElement("div");
 
         title.innerHTML = key;
-        pTimer.innerHTML = value[0] + " h";
-        pDate.innerHTML = value[1] + " jours";
+
+        // @ts-ignore
+        pTimer.innerHTML = value.time + " h";
+        // @ts-ignore
+        pDate.innerHTML = value.date + " jours";
         deleteButton.innerHTML = "Supprimer";
         detailsButton.innerHTML = "Détails";
         addButton.innerHTML = "Ajouter";
