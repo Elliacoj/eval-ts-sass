@@ -16,10 +16,12 @@ import {DetailsPage} from "./DetailsPage.ts";
 class Tracker{
     public addWindow: AddWindow;
     public chrono: Chrono;
+    public check: boolean;
 
     constructor() {
         this.addWindow = new AddWindow();
         this.chrono = new Chrono();
+        this.check = true;
     }
 
     /**
@@ -128,7 +130,9 @@ class Tracker{
                 divTimer.appendChild(timer);
                 divContainer.appendChild(divContent);
                 divTimer.addEventListener("click", () => {
-                    this.chrono.chronoStart(divTimer, key, value.task[x], x);
+                    this.chrono.chronoStart(divTimer, key, value.task[x], x, 0);
+                    this.check = this.chrono.check;
+
                 })
             }
         }
@@ -143,13 +147,15 @@ class Tracker{
      */
     addTask(value:Project, button:HTMLElement, name:string, divList:HTMLElement) {
         button.addEventListener("click", () => {
-            this.addWindow.init(1, "Nommer la tâche", name, value).then(() => {
-                document.getElementById("addButton")!.addEventListener("click", () => {
-                    divList.innerHTML = "";
-                    let project:Project = new Project()
-                    this.listTaskContent(divList, JSON.parse(localStorage.getItem(name)!), name);
+            if(this.chrono.check) {
+                this.addWindow.init(1, "Nommer la tâche", name, value).then(() => {
+                    document.getElementById("addButton")!.addEventListener("click", () => {
+                        divList.innerHTML = "";
+                        let project:Project = new Project()
+                        this.listTaskContent(divList, JSON.parse(localStorage.getItem(name)!), name);
+                    })
                 })
-            })
+            }
         });
     }
 
@@ -161,7 +167,9 @@ class Tracker{
      */
     deleteProject(name:string, button:HTMLElement, remove:HTMLElement) {
         button.addEventListener("click", ()=> {
-            this.addWindow.init(2, "Supprimer le project?", name, null, remove).then();
+            if(this.chrono.check) {
+                this.addWindow.init(2, "Supprimer le project?", name, null, remove).then();
+            }
         });
     }
 
@@ -172,11 +180,13 @@ class Tracker{
      */
     details(button:HTMLElement, title:string) {
         button.addEventListener("click", () => {
-            let detailsPage = new DetailsPage();
-            detailsPage.init();
-            detailsPage.titleConfig(title);
-            detailsPage.footerConfig(title);
-            detailsPage.TaskContent(title);
-        })
+            if(this.chrono.check) {
+                let detailsPage = new DetailsPage();
+                detailsPage.init();
+                detailsPage.titleConfig(title);
+                detailsPage.footerConfig(title);
+                detailsPage.TaskContent(title);
+            }
+        });
     }
 }

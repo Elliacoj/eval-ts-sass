@@ -23,14 +23,16 @@ class Chrono {
      * @param key
      * @param value
      * @param keyPlace
+     * @param type
      */
-    chronoStart(button:HTMLElement, key:string, value:Task, keyPlace:number) {
+    chronoStart(button:HTMLElement, key:string, value:Task, keyPlace:number, type:number) {
         if(button.dataset.time === "0" && this.check) {
             this.time = (JSON.parse(localStorage.getItem(key)!)).task[keyPlace].time;
             let set = setInterval(() => {
                 this.time++;
                 let task:Task = new Task(value.name, value.time, value.date);
                 task.setTimeTask(this.time);
+                task.setDateTask((new Date()).toLocaleDateString());
 
                 let project: Project = JSON.parse(localStorage.getItem(key)!)
                 project = new Project(project.time, project.date, project.task);
@@ -40,7 +42,7 @@ class Chrono {
                 project.setDateProject(Date.now());
 
                 localStorage.setItem(key, JSON.stringify(project));
-                this.changeDataProject(button, project);
+                this.changeDataProject(button, project, type, task);
             }, 1000);
 
             button.addEventListener("click", () => {
@@ -57,11 +59,27 @@ class Chrono {
         }
     }
 
-    changeDataProject(element:HTMLElement, project:Project) {
-        let pTimer: HTMLParagraphElement = element!.parentElement!.parentElement!.parentElement!.firstChild!.firstChild!.firstChild!.lastChild! as HTMLParagraphElement;
-        let pDate: HTMLParagraphElement = element!.parentElement!.parentElement!.parentElement!.firstChild!.firstChild!.lastChild!.lastChild! as HTMLParagraphElement;
-
-        pTimer.innerHTML = Math.round(project.time / 3600) + " h";
-        pDate.innerHTML = Math.round((Date.now() - project.date)/1000/60/60/24) + " jours";
+    /**
+     * Change timer and date into div left
+     * @param element
+     * @param project
+     * @param type
+     * @param task
+     */
+    changeDataProject(element:HTMLElement, project:Project, type:number, task:Task = 0) {
+        let pTimer: HTMLParagraphElement;
+        let pDate: HTMLParagraphElement;
+        if(type === 0) {
+            pTimer = element!.parentElement!.parentElement!.parentElement!.firstChild!.firstChild!.nextSibling!.firstChild!.lastChild as HTMLParagraphElement;
+            pDate = element!.parentElement!.parentElement!.parentElement!.firstChild!.firstChild!.nextSibling!.lastChild!.lastChild as HTMLParagraphElement;
+            pDate.innerHTML = Math.round((Date.now() - project.date)/1000/60/60/24) + " jours";
+            pTimer.innerHTML = Math.round(project.time / 3600) + " h";
+        }
+        else {
+            pTimer = element!.lastChild as HTMLParagraphElement;
+            pDate = element!.nextSibling!.lastChild as HTMLParagraphElement;
+            pTimer.innerHTML = Math.round(task.time / 60) + " min";
+            pDate.innerHTML = task.date;
+        }
     }
 }

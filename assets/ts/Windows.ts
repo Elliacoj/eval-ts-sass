@@ -60,12 +60,14 @@ class Windows {
      */
     addTracker(button:HTMLElement) {
         button.addEventListener("click", () => {
-            this.addWindow.init(0, "Nommer le project").then(() => {
-                document.getElementById("addButton")!.addEventListener("click", () => {
-                    this.contentDiv.innerHTML = "";
-                    this.contentDivConfig();
-                })
-            });
+            if(this.tracker.check) {
+                this.addWindow.init(0, "Nommer le project").then(() => {
+                    document.getElementById("addButton")!.addEventListener("click", () => {
+                        this.contentDiv.innerHTML = "";
+                        this.contentDivConfig();
+                    })
+                });
+            }
         });
     }
 }

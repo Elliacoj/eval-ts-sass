@@ -54,12 +54,7 @@ body {
   }
 
   #container {
-    h2 {
-      font-size: 2rem;
-    }
-
-
-    & > div:last-child > div {
+      & > div:last-child > div {
       display: block;
       & > div {
         width: 95% !important;

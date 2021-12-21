@@ -11,7 +11,7 @@ class Task {
      * @param time
      * @param date
      */
-    constructor(name:string, time:number = 0, date: string =(new Date()).toLocaleDateString()) {
+    constructor(name:string, time:number = 0, date: string = (new Date()).toLocaleDateString()) {
         this.name = name;
         this.time = time;
         this.date = date;
