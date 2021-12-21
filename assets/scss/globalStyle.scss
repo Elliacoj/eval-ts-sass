@@ -36,6 +36,10 @@ body {
   #container {
     margin: 0;
     width: 100%;
+
+    & > div:last-child > div > div:last-child {
+      height: 200px;
+    }
   }
 
   #addWindow{
@@ -53,6 +57,19 @@ body {
     h2 {
       font-size: 2rem;
     }
+
+
+    & > div:last-child > div {
+      display: block;
+      & > div {
+        width: 95% !important;
+        margin: 2rem auto;
+      }
+    }
+
+    & > div:last-child > div > div:last-child {
+      height: 180px;
+    }
   }
 
   #addWindow{
@@ -67,7 +84,6 @@ body {
   }
 
   #container {
-
     & > div:last-child {
       padding: 1rem 0;
       & > div > div:first-child {
@@ -79,7 +95,6 @@ body {
       }
     }
   }
-
 
   #addWindow{
     width: 100%;

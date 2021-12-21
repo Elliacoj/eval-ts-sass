@@ -58,10 +58,10 @@ class Tracker{
         let contentDiv: HTMLElement = document.createElement("div");
         let divLeft: HTMLElement = document.createElement("div");
         let divUp:HTMLElement = document.createElement("div");
+        let title: HTMLElement = document.createElement("h2");
         let divTimer: HTMLElement = document.createElement("div");
         let timer: HTMLElement = document.createElement("i");
         let pTimer: HTMLElement = document.createElement("p");
-        let title: HTMLElement = document.createElement("h2");
         let divDate: HTMLElement = document.createElement("div");
         let date: HTMLElement = document.createElement("i");
         let pDate: HTMLElement = document.createElement("p");
@@ -85,11 +85,11 @@ class Tracker{
         date.className = "far fa-calendar-alt";
 
         contentDiv.appendChild(divLeft);
+        divLeft.appendChild(title);
         divLeft.appendChild(divUp);
         divUp.appendChild(divTimer);
         divTimer.appendChild(timer);
         divTimer.appendChild(pTimer);
-        divUp.appendChild(title);
         divUp.appendChild(divDate);
         divDate.appendChild(date);
         divDate.appendChild(pDate);
@@ -175,7 +175,8 @@ class Tracker{
             let detailsPage = new DetailsPage();
             detailsPage.init();
             detailsPage.titleConfig(title);
+            detailsPage.footerConfig(title);
+            detailsPage.TaskContent(title);
         })
-
     }
 }

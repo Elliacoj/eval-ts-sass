@@ -37,7 +37,7 @@ class AddWindow {
             this.addProject(nameWindow);
         }
         else if(choice === 1) {
-            this.addTask(nameWindow, project, name);
+            this.addTask(nameWindow, name);
         }
         else if(choice === 2) {
             this.deleteProject(nameWindow, name, element!);
@@ -68,14 +68,14 @@ class AddWindow {
     /**
      * Content for add task
      * @param nameWindow
-     * @param project
      * @param name
      */
-    addTask(nameWindow:string, project:Project, name:string) {
+    addTask(nameWindow:string, name:string) {
+        let project: Project = JSON.parse(localStorage.getItem(name)!)
         this.title.innerHTML = nameWindow;
         this.buttonAdd.innerHTML = "Ajouter";
         this.divContainer.appendChild(this.input);
-        this.confirmTask(project, name)
+        this.buttonAdd.addEventListener("click", () => this.confirmTask(name, project));
     }
 
     /**
@@ -122,16 +122,15 @@ class AddWindow {
     /**
      * Add a task into local storage
      */
-    confirmTask(project:Project, name:string) {
-        this.buttonAdd.addEventListener("click", () => {
-            if(this.input.value !== "") {
-                let newProject:Project = new Project(project.time, project.date, project.task);
-                let task:Task = new Task(this.input.value)
+    confirmTask(name:string, project: Project) {
+        this.buttonAdd.removeEventListener("click", () => this.confirmTask(name, project));
+        if(this.input.value !== "") {
+            let newProject:Project = new Project(project.time, project.date, project.task);
+            let task:Task = new Task(this.input.value)
 
-                newProject.addTask(task);
-                localStorage.setItem(name, JSON.stringify(newProject));
-                this.divContainer.remove();
-            }
-        });
+            newProject.addTask(task);
+            localStorage.setItem(name, JSON.stringify(newProject));
+            this.divContainer.remove();
+        }
     }
 }
