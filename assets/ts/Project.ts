@@ -13,7 +13,7 @@ class Project {
      * @param date
      * @param task
      */
-    constructor(time:number = 0, date:number = 0, task:Task[] = []) {
+    constructor(time:number = 0, date:number = Date.now(), task:Task[] = []) {
         this.time = time;
         this.date = date;
         this.task = task;
@@ -54,6 +54,15 @@ class Project {
             this.task = [task];
         }
 
+    }
+
+    /**
+     * Update a task into table
+     * @param task
+     * @param keyPlace
+     */
+    updateTask(task:Task, keyPlace:number) {
+        this.task.splice(keyPlace, 1, task);
     }
 
     /**

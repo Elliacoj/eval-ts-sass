@@ -1,0 +1,106 @@
+@use "modules/var";
+
+#container {
+  width: 70%;
+  margin: 5% auto 0 auto;
+
+  background-color: var.$B-color-ten;
+  border-radius: 5px;
+  box-shadow: 5px 5px 4px darkgray;
+
+  & > div > h1 {
+    background-color: var.$B-color-twenty;
+    padding: 1rem;
+    text-align: center;
+    font-size: 5rem;
+    font-weight: bold;
+    color: var.$B-color;
+  }
+
+  & > div:last-child {
+    padding: 1rem;
+
+    & > div {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-around;
+      width: 100%;
+      border-radius: 1rem;
+      background-color: var.$B-color-five;
+      padding: 1rem 0;
+      color: var.$B-color;
+      font-size: 2rem;
+      margin-top: 1rem;
+
+      & > div:first-child {
+        width: 38%;
+
+        & > div {
+          width: 100%;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+
+          &:first-child > div {
+            text-align: center;
+            font-size: 3rem;
+            color: greenyellow;
+
+            & > p {
+              font-size: 1.5rem;
+            }
+          }
+
+          &:first-child {
+            margin-bottom: 4rem;
+          }
+
+          &:last-child {
+            cursor: pointer;
+          }
+
+          &:last-child > div:hover {
+            color: darkblue;
+          }
+        }
+      }
+
+      & > div:last-child {
+        width: 58%;
+        background-color: var.$B-color;
+        color: darkblue;
+        padding: 1rem 1rem;
+        height: 140px;
+        overflow: scroll;
+
+        & > div {
+          padding: 0.5rem 0.5rem;
+          display: flex;
+          flex-wrap: nowrap;
+          border-bottom: 1px solid darkgray;
+
+          & > div:first-child {
+            width: 80%;
+            display: flex;
+            align-items: center;
+          }
+          & > div:last-child {
+            width: 15%;
+            text-align: right;
+            font-size: 3rem;
+            color: green;
+            cursor: pointer;
+          }
+        }
+      }
+    }
+
+    & > button {
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      display: block;
+      margin: 1rem auto;
+    }
+  }
+}

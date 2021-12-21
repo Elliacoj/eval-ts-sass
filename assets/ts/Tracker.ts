@@ -12,9 +12,11 @@ import {Chrono} from "./Chrono.ts";
 
 class Tracker{
     public addWindow: AddWindow;
+    public chrono: Chrono;
 
     constructor() {
         this.addWindow = new AddWindow();
+        this.chrono = new Chrono();
     }
 
     /**
@@ -69,9 +71,9 @@ class Tracker{
         title.innerHTML = key;
 
         // @ts-ignore
-        pTimer.innerHTML = value.time + " h";
+        pTimer.innerHTML = Math.round(value.time / 3600) + " h";
         // @ts-ignore
-        pDate.innerHTML = value.date + " jours";
+        pDate.innerHTML = Math.round((Date.now() - value.date)/1000/60/60/24) + " jours";
         deleteButton.innerHTML = "Supprimer";
         detailsButton.innerHTML = "Détails";
         addButton.innerHTML = "Ajouter";
@@ -94,7 +96,7 @@ class Tracker{
         divBottom.appendChild(addButton);
         contentDiv.appendChild(listDiv);
         container.appendChild(contentDiv)
-        this.listTaskContent(listDiv, value);
+        this.listTaskContent(listDiv, value, key);
         this.addTask(value, addButton, key, listDiv);
         this.deleteProject(key, deleteButton, contentDiv);
     }
@@ -103,11 +105,11 @@ class Tracker{
      * Add content list into content div
      * @param divContainer
      * @param value
+     * @param key
      */
-    listTaskContent(divContainer: HTMLElement, value:Project) {
+    listTaskContent(divContainer: HTMLElement, value:Project, key:string) {
         if(value.task.length !== 0) {
             for(let x:number = 0; x < value.task.length; x++) {
-                let chrono = new Chrono(value.task[x].time);
                 let divContent: HTMLElement = document.createElement("div");
                 let divTitle:HTMLElement = document.createElement("div");
                 let divTimer:HTMLElement = document.createElement("div");
@@ -122,7 +124,7 @@ class Tracker{
                 divTimer.appendChild(timer);
                 divContainer.appendChild(divContent);
                 divTimer.addEventListener("click", () => {
-                    chrono.chronoStart(divTimer);
+                    this.chrono.chronoStart(divTimer, key, value.task[x], x);
                 })
             }
         }
@@ -141,7 +143,7 @@ class Tracker{
                 document.getElementById("addButton")!.addEventListener("click", () => {
                     divList.innerHTML = "";
                     let project:Project = new Project()
-                    this.listTaskContent(divList, JSON.parse(localStorage.getItem(name)!));
+                    this.listTaskContent(divList, JSON.parse(localStorage.getItem(name)!), name);
                 })
             })
         });

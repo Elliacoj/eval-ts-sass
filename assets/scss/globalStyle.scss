@@ -1,4 +1,6 @@
 @use "modules/var";
+@use "homeContainer";
+@use "addWindow";
 
 * {
   margin: 0;
@@ -15,149 +17,71 @@ body {
   font-family: "Comic Sans MS", sans-serif;
 }
 
-#container {
-  width: 70%;
-  margin: 5% auto 0 auto;
-
-  background-color: var.$B-color-ten;
-  border-radius: 5px;
-  box-shadow: 5px 5px 4px darkgray;
-
-  & > div > h1 {
-    background-color: var.$B-color-twenty;
-    padding: 1rem;
-    text-align: center;
-    font-size: 5rem;
-    font-weight: bold;
-    color: var.$B-color;
+@media screen and (max-width: 1200px){
+  #container {
+    width: 80%;
   }
 
-  & > div:last-child {
-    padding: 1rem;
-
-    & > div {
-      display: flex;
-      flex-wrap: nowrap;
-      justify-content: space-around;
-      width: 100%;
-      border-radius: 1rem;
-      background-color: var.$B-color-five;
-      padding: 1rem 0;
-      color: var.$B-color;
-      font-size: 2rem;
-      margin-top: 1rem;
-
-      & > div:first-child {
-        width: 38%;
-
-        & > div {
-          width: 100%;
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-
-          &:first-child > div {
-            text-align: center;
-            font-size: 3rem;
-            color: greenyellow;
-
-            & > p {
-              font-size: 1.5rem;
-            }
-          }
-
-          & > div:not(h2) {
-            cursor: pointer;
-          }
-
-          &:first-child {
-            margin-bottom: 4rem;
-          }
-
-          &:last-child > div:hover {
-            color: darkblue;
-          }
-        }
-      }
-
-      & > div:last-child {
-        width: 58%;
-        background-color: var.$B-color;
-        color: darkblue;
-        padding: 1rem 1rem;
-        height: 140px;
-        overflow: scroll;
-
-        & > div {
-          padding: 0.5rem 0.5rem;
-          display: flex;
-          flex-wrap: nowrap;
-          border-bottom: 1px solid darkgray;
-
-          & > div:first-child {
-            width: 80%;
-            display: flex;
-            align-items: center;
-          }
-          & > div:last-child {
-            width: 15%;
-            text-align: right;
-            font-size: 3rem;
-            color: green;
-            cursor: pointer;
-          }
-        }
-      }
-    }
-
-    & > button {
-      padding: 0.5rem 1rem;
-      font-weight: bold;
-      cursor: pointer;
-      display: block;
-      margin: 1rem auto;
-    }
+  #addWindow{
+    width: 50%;
+    left: 25%;
   }
 }
 
-#addWindow {
-  background-color: var.$B-color-fiveTeen;
-  position: absolute;
-  top: 20%;
-  width: 30%;
-  left: 35%;
-  border-radius: 5px;
-  padding: 1rem;
-  box-shadow: 5px 5px 4px darkgray;
-
-  & > h2 {
-    text-align: center;
-    font-size: 2rem;
-    margin-bottom: 2rem;
-    text-decoration-line: underline;
+@media screen and (max-width: 1000px){
+  HTML {
+    font-size: 55%;
+  }
+  #container {
+    margin: 0;
+    width: 100%;
   }
 
-  & > input {
-    display: block;
+  #addWindow{
     width: 60%;
-    margin: 0.5rem auto;
-    padding: 1rem;
-    font-size: 1.5rem;
+    left: 20%;
+  }
+}
+
+@media screen and (max-width: 800px){
+  HTML {
+    font-size: 50%;
   }
 
-  & > button {
-    padding: 0.5rem 1rem;
-    font-weight: bold;
-    margin: 0 2rem;
+  #container {
+    h2 {
+      font-size: 2rem;
+    }
   }
 
-  & > button:last-child {
-    float: right;
+  #addWindow{
+    width: 70%;
+    left: 15%;
+  }
+}
+
+@media screen and (max-width: 600px){
+  HTML {
+    font-size: 50%;
   }
 
-  & > span {
-    color: red;
-    font-style: italic;
-    font-size: 1.5rem;
+  #container {
+
+    & > div:last-child {
+      padding: 1rem 0;
+      & > div > div:first-child {
+        width: 55%;
+      }
+
+      & > div > div:last-child {
+        width: 40%;
+      }
+    }
+  }
+
+
+  #addWindow{
+    width: 100%;
+    left: 0;
   }
 }
