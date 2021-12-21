@@ -1,0 +1,26 @@
+@use "modules/var";
+
+#divDetailsPage {
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  box-shadow: 5px 5px 4px darkgray;
+  background-color: var.$B-color-ten;
+
+  & > div:first-child {
+    background-color: darken(var.$B-color-twenty, 5%);
+    & > h2 {
+      text-align: center;
+      padding: 0 1rem;
+      font-size: 4rem;
+      color: var.$B-color;
+    }
+  }
+
+  & > div:nth-child(2) {
+    background-color: var.$B-color;
+    height: 500px;
+    margin: 1rem 10%;
+  }
+}

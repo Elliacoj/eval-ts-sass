@@ -10,6 +10,9 @@ import {AddWindow} from "./addWindow.ts";
 // @ts-ignore
 import {Chrono} from "./Chrono.ts";
 
+// @ts-ignore
+import {DetailsPage} from "./DetailsPage.ts";
+
 class Tracker{
     public addWindow: AddWindow;
     public chrono: Chrono;
@@ -99,6 +102,7 @@ class Tracker{
         this.listTaskContent(listDiv, value, key);
         this.addTask(value, addButton, key, listDiv);
         this.deleteProject(key, deleteButton, contentDiv);
+        this.details(detailsButton, key);
     }
 
     /**
@@ -159,5 +163,19 @@ class Tracker{
         button.addEventListener("click", ()=> {
             this.addWindow.init(2, "Supprimer le project?", name, null, remove).then();
         });
+    }
+
+    /**
+     * Create details page
+     * @param button
+     * @param title
+     */
+    details(button:HTMLElement, title:string) {
+        button.addEventListener("click", () => {
+            let detailsPage = new DetailsPage();
+            detailsPage.init();
+            detailsPage.titleConfig(title);
+        })
+
     }
 }
