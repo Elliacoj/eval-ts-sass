@@ -17,11 +17,13 @@ class Tracker{
     public addWindow: AddWindow;
     public chrono: Chrono;
     public check: boolean;
+    public checkDetails:boolean;
 
     constructor() {
         this.addWindow = new AddWindow();
         this.chrono = new Chrono();
         this.check = true;
+        this.checkDetails = true;
     }
 
     /**
@@ -104,7 +106,7 @@ class Tracker{
         this.listTaskContent(listDiv, value, key);
         this.addTask(value, addButton, key, listDiv);
         this.deleteProject(key, deleteButton, contentDiv);
-        this.details(detailsButton, key);
+        this.details(detailsButton, key, listDiv);
     }
 
     /**
@@ -147,7 +149,7 @@ class Tracker{
      */
     addTask(value:Project, button:HTMLElement, name:string, divList:HTMLElement) {
         button.addEventListener("click", () => {
-            if(this.chrono.check) {
+            if(this.chrono.check && !document.getElementById("divDetailsPage")) {
                 this.addWindow.init(1, "Nommer la tâche", name, value).then(() => {
                     document.getElementById("addButton")!.addEventListener("click", () => {
                         divList.innerHTML = "";
@@ -167,7 +169,7 @@ class Tracker{
      */
     deleteProject(name:string, button:HTMLElement, remove:HTMLElement) {
         button.addEventListener("click", ()=> {
-            if(this.chrono.check) {
+            if(this.chrono.check && !document.getElementById("divDetailsPage")) {
                 this.addWindow.init(2, "Supprimer le project?", name, null, remove).then();
             }
         });
@@ -177,15 +179,16 @@ class Tracker{
      * Create details page
      * @param button
      * @param title
+     * @param contentDiv
      */
-    details(button:HTMLElement, title:string) {
+    details(button:HTMLElement, title:string, contentDiv:HTMLElement) {
         button.addEventListener("click", () => {
-            if(this.chrono.check) {
+            if(this.chrono.check && !document.getElementById("divDetailsPage")) {
                 let detailsPage = new DetailsPage();
                 detailsPage.init();
                 detailsPage.titleConfig(title);
-                detailsPage.footerConfig(title);
-                detailsPage.TaskContent(title);
+                detailsPage.footerConfig(title, contentDiv);
+                detailsPage.TaskContent(title, contentDiv);
             }
         });
     }

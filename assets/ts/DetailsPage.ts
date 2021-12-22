@@ -3,6 +3,12 @@ import {Project} from "./Project.ts";
 // @ts-ignore
 import {Chrono} from "./Chrono.ts";
 
+// @ts-ignore
+import {AddWindow} from "./addWindow.ts";
+
+// @ts-ignore
+import {Tracker} from "./Tracker.ts";
+
 export {DetailsPage};
 
 class DetailsPage {
@@ -12,6 +18,8 @@ class DetailsPage {
     public divContent:HTMLElement;
     public divFooter:HTMLElement;
     public chrono:Chrono;
+    public addWindow:AddWindow;
+    public tracker:Tracker;
 
     /**
      * Constructor
@@ -23,6 +31,8 @@ class DetailsPage {
         this.divContent = document.createElement("div") as HTMLElement;
         this.divFooter = document.createElement("div") as HTMLElement;
         this.chrono = new Chrono();
+        this.addWindow = new AddWindow();
+        this.tracker = new Tracker();
     }
 
     /**
@@ -49,8 +59,9 @@ class DetailsPage {
     /**
      * Config for footer div
      * @param name
+     * @param contentDiv
      */
-    footerConfig(name:string) {
+    footerConfig(name:string, contentDiv:HTMLElement) {
         this.divFooter.innerHTML = "";
         let project: Project = JSON.parse(localStorage.getItem(name)!);
         let divTimer = document.createElement("div") as HTMLElement;
@@ -61,6 +72,7 @@ class DetailsPage {
 
         timer.className = "far fa-clock";
         spanReturn.innerHTML = "Retour";
+        spanReturn.id = "returnDetails"
         spanAdd.innerHTML = "Ajouter une tâche";
         pTimer.innerHTML = Math.round(project.time / 3600) + " h au total";
 
@@ -70,14 +82,16 @@ class DetailsPage {
         this.divFooter.appendChild(spanReturn);
         this.divFooter.appendChild(spanAdd);
         this.returnAction(spanReturn);
+        this.addAction(spanAdd, name, contentDiv);
     }
 
     /**
      * Add content task into content div
      * @param key
+     * @param contentDiv
      * @constructor
      */
-    TaskContent(key:string) {
+    TaskContent(key:string, contentDiv:HTMLElement) {
         this.divContent.innerHTML = "";
         let project: Project = JSON.parse(localStorage.getItem(key)!);
         if(project.task.length !== 0) {
@@ -96,7 +110,6 @@ class DetailsPage {
                 let updateB:HTMLElement = document.createElement("i");
 
                 pTimer.innerHTML = Math.round(project.task[x].time / 60) + " min";
-                console.log(project.task[x].date);
                 pDate.innerHTML = project.task[x].date;
                 divTimer.dataset.time = "0";
                 timer.className = "far fa-clock";
@@ -121,7 +134,8 @@ class DetailsPage {
                     this.chrono.chronoStart(divTimer, key, project.task[x], x, 1);
                 });
 
-                this.deleteAction(divDelete, divContent, key, x);
+                this.deleteAction(divDelete, divContent, key, x, contentDiv);
+                this.updateAction(divUpdate, divContent, key, x, contentDiv);
             }
         }
     }
@@ -132,8 +146,10 @@ class DetailsPage {
      */
     returnAction(button:HTMLElement) {
         button.addEventListener("click", () => {
-            this.divContainer.innerHTML = "";
-            this.divContainer.remove();
+            if(this.chrono.check) {
+                this.divContainer.innerHTML = "";
+                this.divContainer.remove();
+            }
         });
     }
 
@@ -143,13 +159,63 @@ class DetailsPage {
      * @param element
      * @param name
      * @param x
+     * @param contentDiv
      */
-    deleteAction(button:HTMLElement, element:HTMLElement, name:string, x:number) {
+    deleteAction(button:HTMLElement, element:HTMLElement, name:string, x:number, contentDiv:HTMLElement) {
         button.addEventListener("click", () => {
-            let project = JSON.parse(localStorage.getItem(name)!);
-            project.task.splice(x, 1);
-            localStorage.setItem(name, JSON.stringify(project));
-            element.remove();
-        })
+            if(this.chrono.check) {
+                let project = JSON.parse(localStorage.getItem(name)!);
+                project.task.splice(x, 1);
+                localStorage.setItem(name, JSON.stringify(project));
+                let contentHome:HTMLElement = contentDiv.children[x] as HTMLElement;
+                contentHome.remove();
+                element.remove();
+            }
+        });
+    }
+
+    /**
+     * Update a task into project
+     * @param button
+     * @param element
+     * @param name
+     * @param x
+     * @param contentDiv
+     */
+    updateAction(button:HTMLElement, element:HTMLElement, name:string, x:number, contentDiv:HTMLElement) {
+        button.addEventListener("click", () => {
+            if(this.chrono.check) {
+                this.addWindow.init(3, "Renommer la tâche", name,null, null, x).then(() => {
+                    document.getElementById("addButton")!.addEventListener("click", () => {
+                        this.divContent.innerHTML = "";
+                        this.TaskContent(name, contentDiv);
+                        let contentHome:HTMLElement = contentDiv.children[x].firstChild as HTMLElement;
+                        contentHome.innerHTML = JSON.parse(localStorage.getItem(name)!).task[x].name;
+                    });
+                });
+            }
+        });
+    }
+
+    /**
+     * Add a task into a project
+     * @param button
+     * @param name
+     * @param contentDiv
+     */
+    addAction(button:HTMLElement, name:string, contentDiv:HTMLElement) {
+        button.addEventListener("click", () => {
+            if(this.chrono.check) {
+                this.addWindow.init(1, "Nommer la tâche", name).then(() => {
+                    document.getElementById("addButton")!.addEventListener("click", () => {
+                        this.divContent.innerHTML = "";
+                        this.TaskContent(name, contentDiv);
+                        contentDiv.innerHTML = "";
+                        this.tracker.listTaskContent(contentDiv, JSON.parse(localStorage.getItem(name)!), name);
+
+                    })
+                })
+            }
+        });
     }
 }

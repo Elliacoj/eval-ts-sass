@@ -28,7 +28,7 @@ class AddWindow {
     /**
      * Init the add window
      */
-    async init(choice:number, nameWindow:string, name:string = "", project:object|null = null, element:HTMLElement|null = null) {
+    async init(choice:number, nameWindow:string, name:string = "", project:object|null = null, element:HTMLElement|null = null, x:number = 0) {
         this.divContainer.innerHTML = "";
         this.buttonReturn.innerHTML = "Retour";
         this.buttonAdd.id = "addButton";
@@ -41,6 +41,9 @@ class AddWindow {
         }
         else if(choice === 2) {
             this.deleteProject(nameWindow, name, element!);
+        }
+        else if(choice === 3) {
+            this.updateTask(nameWindow, name, element!, x);
         }
 
         this.divContainer.appendChild(this.buttonAdd);
@@ -90,6 +93,26 @@ class AddWindow {
         this.buttonAdd.addEventListener("click", () => {
             localStorage.removeItem(remove);
             element.remove();
+            this.divContainer.remove();
+        });
+    }
+
+    /**
+     * Update a task
+     * @param nameWindow
+     * @param name
+     * @param element
+     * @param x
+     */
+    updateTask(nameWindow:string, name:string, element:HTMLElement, x:number) {
+        this.title.innerHTML = nameWindow;
+        this.buttonAdd.innerHTML = "Confirmer";
+        this.input.value = JSON.parse(localStorage.getItem(name)!).task[x].name;
+        this.divContainer.appendChild(this.input);
+        this.buttonAdd.addEventListener("click", () => {
+           let project = JSON.parse(localStorage.getItem(name)!);
+           project.task[x].name = this.input.value;
+           localStorage.setItem(name, JSON.stringify(project));
             this.divContainer.remove();
         });
     }
