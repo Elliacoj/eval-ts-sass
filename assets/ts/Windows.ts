@@ -46,8 +46,11 @@ class Windows {
      * Config the content div
      */
     contentDivConfig() {
+        let buttonDisco:HTMLElement = document.createElement("button");
         let buttonAdd:HTMLElement = document.createElement("button");
+        buttonDisco.innerHTML = "<a href='./index.php?controller=user&action=disconnected'>Déconnexion</a>";
         buttonAdd.innerHTML = "Ajouter un projet";
+        this.contentDiv.appendChild(buttonDisco);
         this.contentDiv.appendChild(buttonAdd);
         this.tracker.init(this.contentDiv);
         this.container.appendChild(this.contentDiv);

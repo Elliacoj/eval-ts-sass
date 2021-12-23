@@ -2,6 +2,7 @@
 @use "homeContainer";
 @use "addWindow";
 @use "detailsPage";
+@use "connection";
 
 * {
   margin: 0;
@@ -26,6 +27,10 @@ body {
   #addWindow{
     width: 50%;
     left: 25%;
+  }
+
+  #form {
+    width: 50%;
   }
 }
 
@@ -71,6 +76,10 @@ body {
     width: 70%;
     left: 15%;
   }
+
+  #form {
+    width: 80%;
+  }
 }
 
 @media screen and (max-width: 600px){
@@ -94,5 +103,9 @@ body {
   #addWindow{
     width: 100%;
     left: 0;
+  }
+
+  #form {
+    width: 100%;
   }
 }
