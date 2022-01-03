@@ -43,6 +43,11 @@ class Chrono {
 
                 localStorage.setItem(key, JSON.stringify(project));
                 this.changeDataProject(button, project, type, task);
+
+                let xhr = new XMLHttpRequest();
+                xhr.open("PUT", "./api/index.php");
+                xhr.responseType = "json";
+                xhr.send(JSON.stringify({type: "chrono", task: button.dataset.id, timeProject: project.time, dateProject: project.date, timeTask: task.time, dateTask: task.date}));
             }, 1000);
 
             button.addEventListener("click", () => {

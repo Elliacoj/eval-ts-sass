@@ -3,6 +3,7 @@
 namespace Amaur\EvalTsSass\Controller;
 
 use Amaur\EvalTsSass\Entity\User;
+use Amaur\EvalTsSass\Manager\ProjectManager;
 use Amaur\EvalTsSass\Manager\UserManager;
 use RedBeanPHP\R;
 
@@ -40,6 +41,9 @@ class UserController {
         header("location: ./index.php");
     }
 
+    /**
+     * Create a user
+     */
     public function create() {
         $mail = filter_var($_POST['mailCreate'], FILTER_SANITIZE_EMAIL);
         $password = filter_var($_POST['passwordCreate'], FILTER_SANITIZE_STRING);

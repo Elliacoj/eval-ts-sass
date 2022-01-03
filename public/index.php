@@ -21,7 +21,6 @@ if(isset($_GET['controller'], $_GET['action']) && $_GET['controller'] === "user"
             $userController->create();
             break;
     }
-
 }
 ?>
 

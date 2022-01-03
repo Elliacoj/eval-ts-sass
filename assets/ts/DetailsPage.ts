@@ -94,50 +94,63 @@ class DetailsPage {
     TaskContent(key:string, contentDiv:HTMLElement) {
         this.divContent.innerHTML = "";
         let project: Project = JSON.parse(localStorage.getItem(key)!);
-        if(project.task.length !== 0) {
-            for(let x:number = 0; x < project.task.length; x++) {
-                let divContent: HTMLElement = document.createElement("div");
-                let divTitle:HTMLElement = document.createElement("div");
-                let divTimer:HTMLElement = document.createElement("div");
-                let timer:HTMLElement = document.createElement("i");
-                let pTimer:HTMLElement = document.createElement("p") as HTMLElement;
-                let divDate:HTMLElement = document.createElement("div");
-                let date:HTMLElement = document.createElement("i");
-                let pDate:HTMLElement = document.createElement("p") as HTMLElement;
-                let divDelete:HTMLElement = document.createElement("div");
-                let deleteB:HTMLElement = document.createElement("i");
-                let divUpdate:HTMLElement = document.createElement("div");
-                let updateB:HTMLElement = document.createElement("i");
 
-                pTimer.innerHTML = Math.round(project.task[x].time / 60) + " min";
-                pDate.innerHTML = project.task[x].date;
-                divTimer.dataset.time = "0";
-                timer.className = "far fa-clock";
-                date.className = "far fa-calendar-alt";
-                deleteB.className = "fas fa-trash-alt";
-                updateB.className = "fas fa-edit";
-                divTitle.innerHTML = project.task[x].name;
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", "./api/index.php?type=task&name=" + key);
+        xhr.responseType = "json";
+        xhr.send();
+        xhr.onload = () => {
+            let response = xhr.response;
+            if(project.task.length !== 0) {
+                for(let x:number = 0; x < project.task.length; x++) {
+                    let divContent: HTMLElement = document.createElement("div");
+                    let divTitle:HTMLElement = document.createElement("div");
+                    let divTimer:HTMLElement = document.createElement("div");
+                    let timer:HTMLElement = document.createElement("i");
+                    let pTimer:HTMLElement = document.createElement("p") as HTMLElement;
+                    let divDate:HTMLElement = document.createElement("div");
+                    let date:HTMLElement = document.createElement("i");
+                    let pDate:HTMLElement = document.createElement("p") as HTMLElement;
+                    let divDelete:HTMLElement = document.createElement("div");
+                    let deleteB:HTMLElement = document.createElement("i");
+                    let divUpdate:HTMLElement = document.createElement("div");
+                    let updateB:HTMLElement = document.createElement("i");
 
-                divContent.appendChild(divTitle);
-                divContent.appendChild(divTimer);
-                divContent.appendChild(divDate);
-                divContent.appendChild(divDelete);
-                divContent.appendChild(divUpdate);
-                divTimer.appendChild(timer);
-                divTimer.appendChild(pTimer);
-                divDate.appendChild(date);
-                divDate.appendChild(pDate);
-                divDelete.appendChild(deleteB);
-                divUpdate.appendChild(updateB);
-                this.divContent.appendChild(divContent);
-                divTimer.addEventListener("click", () => {
-                    this.chrono.chronoStart(divTimer, key, project.task[x], x, 1);
-                });
+                    pTimer.innerHTML = Math.round(project.task[x].time / 60) + " min";
+                    pDate.innerHTML = project.task[x].date;
+                    divTimer.dataset.time = "0";
+                    divTimer.dataset.id = response[x]["id"];
+                    divDelete.dataset.id = response[x]["id"];
+                    divUpdate.dataset.id = response[x]["id"];
+                    timer.className = "far fa-clock";
+                    date.className = "far fa-calendar-alt";
+                    deleteB.className = "fas fa-trash-alt";
+                    updateB.className = "fas fa-edit";
+                    divTitle.innerHTML = project.task[x].name;
 
-                this.deleteAction(divDelete, divContent, key, x, contentDiv);
-                this.updateAction(divUpdate, divContent, key, x, contentDiv);
+                    divContent.appendChild(divTitle);
+                    divContent.appendChild(divTimer);
+                    divContent.appendChild(divDate);
+                    divContent.appendChild(divDelete);
+                    divContent.appendChild(divUpdate);
+                    divTimer.appendChild(timer);
+                    divTimer.appendChild(pTimer);
+                    divDate.appendChild(date);
+                    divDate.appendChild(pDate);
+                    divDelete.appendChild(deleteB);
+                    divUpdate.appendChild(updateB);
+                    this.divContent.appendChild(divContent);
+                    divTimer.addEventListener("click", () => {
+                        this.chrono.chronoStart(divTimer, key, project.task[x], x, 1);
+                    });
+
+                    this.deleteAction(divDelete, divContent, key, x, contentDiv);
+                    this.updateAction(divUpdate, divContent, key, x, contentDiv);
+                }
             }
         }
+
+
     }
 
     /**
@@ -168,6 +181,10 @@ class DetailsPage {
                 project.task.splice(x, 1);
                 localStorage.setItem(name, JSON.stringify(project));
                 let contentHome:HTMLElement = contentDiv.children[x] as HTMLElement;
+                let xhr = new XMLHttpRequest();
+                xhr.open("DELETE", "./api/index.php");
+                xhr.responseType = "json";
+                xhr.send(JSON.stringify({type: "task", id: button.dataset.id}));
                 contentHome.remove();
                 element.remove();
             }
@@ -185,7 +202,7 @@ class DetailsPage {
     updateAction(button:HTMLElement, element:HTMLElement, name:string, x:number, contentDiv:HTMLElement) {
         button.addEventListener("click", () => {
             if(this.chrono.check) {
-                this.addWindow.init(3, "Renommer la tâche", name,null, null, x).then(() => {
+                this.addWindow.init(3, "Renommer la tâche", name,null, button, x).then(() => {
                     document.getElementById("addButton")!.addEventListener("click", () => {
                         this.divContent.innerHTML = "";
                         this.TaskContent(name, contentDiv);

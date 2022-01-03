@@ -120,6 +120,11 @@ class AddWindow {
            project.task[x].name = this.input.value;
            localStorage.setItem(name, JSON.stringify(project));
             this.divContainer.remove();
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("PUT", "./api/index.php");
+            xhr.responseType = "json";
+            xhr.send(JSON.stringify({type: "rename", id: element.dataset.id, name: this.input.value}));
         });
     }
 

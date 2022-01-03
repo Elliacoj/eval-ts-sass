@@ -64,15 +64,62 @@ class ProjectManager extends Manager{
     /**
      * Return id or null
      * @param $name
-     * @return int|null
+     * @return Project|null
      */
     public static function searchName($name): ?Project {
         $project = R::findOne('elliaproject', "name = ?", [$name]);
 
         if(!is_null($project)) {
-
             return new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk));
         }
         return null;
+    }
+
+    /**
+     * Return id or null
+     * @param $id
+     * @return Project|null
+     */
+    public static function searchId($id): ?Project {
+        $project = R::findOne('elliaproject', "id = ?", [$id]);
+
+        if(!is_null($project)) {
+            return new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk));
+        }
+        return null;
+    }
+
+    /**
+     * Update a project into project table
+     * @param Project $project
+     */
+    public static function update(Project $project) {
+        $id = $project->getId();
+        $time = $project->getTime();
+        $date = $project->getDate();
+        $project = R::load("elliaproject", $id);
+        $project->time = $time;
+        $project->date = $date;
+        try {
+            R::store($project);
+        }
+        catch (SQL $e) {}
+    }
+
+    /**
+     * Return an array of all user's project
+     * @param $idUser
+     * @return array
+     */
+    public static function getAll($idUser):array {
+        $allProject = [];
+
+        $projects = R::find("elliaproject", "userfk= ?", [$idUser]);
+        if(count($projects) !== 0) {
+            foreach ($projects as $project) {
+                $allProject[] = new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk));
+            }
+        }
+        return $allProject;
     }
 }

@@ -117,25 +117,34 @@ class Tracker{
      */
     listTaskContent(divContainer: HTMLElement, value:Project, key:string) {
         if(value.task.length !== 0) {
-            for(let x:number = 0; x < value.task.length; x++) {
-                let divContent: HTMLElement = document.createElement("div");
-                let divTitle:HTMLElement = document.createElement("div");
-                let divTimer:HTMLElement = document.createElement("div");
-                let timer:HTMLElement = document.createElement("i");
+            let xhr = new XMLHttpRequest();
+            xhr.open("GET", "./api/index.php?type=task&name=" + key);
+            xhr.responseType = "json";
+            xhr.send();
+            xhr.onload = () => {
+                let response = xhr.response;
+                for (let x: number = 0; x < value.task.length; x++) {
 
-                divTimer.dataset.time = "0";
-                timer.className = "far fa-clock";
-                divTitle.innerHTML = value.task[x].name;
+                    let divContent: HTMLElement = document.createElement("div");
+                    let divTitle: HTMLElement = document.createElement("div");
+                    let divTimer: HTMLElement = document.createElement("div");
+                    let timer: HTMLElement = document.createElement("i");
 
-                divContent.appendChild(divTitle);
-                divContent.appendChild(divTimer);
-                divTimer.appendChild(timer);
-                divContainer.appendChild(divContent);
-                divTimer.addEventListener("click", () => {
-                    this.chrono.chronoStart(divTimer, key, value.task[x], x, 0);
-                    this.check = this.chrono.check;
+                    divTimer.dataset.time = "0";
+                    divTimer.dataset.id = response[x]["id"];
+                    timer.className = "far fa-clock";
+                    divTitle.innerHTML = value.task[x].name;
 
-                })
+                    divContent.appendChild(divTitle);
+                    divContent.appendChild(divTimer);
+                    divTimer.appendChild(timer);
+                    divContainer.appendChild(divContent);
+                    divTimer.addEventListener("click", () => {
+                        this.chrono.chronoStart(divTimer, key, value.task[x], x, 0);
+                        this.check = this.chrono.check;
+
+                    })
+                }
             }
         }
     }
