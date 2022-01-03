@@ -2,6 +2,8 @@
 import {Windows} from "./Windows.ts";
 // @ts-ignore
 import {Project} from "./Project.ts";
+// @ts-ignore
+import { Task } from "./Task.ts";
 
 localStorage.clear();
 
@@ -16,12 +18,20 @@ xhr.onload = () => {
             let newProject: Project = new Project();
             newProject.setTimeProject(project.time);
             newProject.setDateProject(project.date);
+
+            for(let task of project.task) {
+                let newTask: Task = new Task();
+                newTask.setNameTask(task.name);
+                newTask.setTimeTask(task.time);
+                newTask.setDateTask(task.date);
+                newProject.addTask(newTask);
+            }
             localStorage.setItem(project.name, JSON.stringify(newProject));
         }
+    }
 
-        if(document.getElementById("container")) {
-            const windows = new Windows();
-            windows.init();
-        }
+    if(document.getElementById("container")) {
+        const windows = new Windows();
+        windows.init();
     }
 }
