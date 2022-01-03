@@ -7,6 +7,7 @@ class Task {
     private ?string $name;
     private ?int $time;
     private ?string $date;
+    private ?Project $projectFk;
 
     /**
      * @param int|null $id
@@ -14,12 +15,13 @@ class Task {
      * @param int|null $time
      * @param string|null $date
      */
-    public function __construct(int $id = null, string $name = null, int $time = null, string $date = null)
+    public function __construct(int $id = null, string $name = null, int $time = null, string $date = null, Project $projectFk = null)
     {
         $this->id = $id;
         $this->name = $name;
         $this->time = $time;
         $this->date = $date;
+        $this->projectFk = $projectFk;
     }
 
     /**
@@ -34,10 +36,12 @@ class Task {
     /**
      * Set the id of Task
      * @param int|null $id
+     * @return Task
      */
-    public function setId(?int $id): void
+    public function setId(?int $id): Task
     {
         $this->id = $id;
+        return $this;
     }
 
     /**
@@ -52,10 +56,12 @@ class Task {
     /**
      * Set the name of Task
      * @param string|null $name
+     * @return Task
      */
-    public function setName(?string $name): void
+    public function setName(?string $name): Task
     {
         $this->name = $name;
+        return $this;
     }
 
     /**
@@ -70,10 +76,12 @@ class Task {
     /**
      * Set the time of Task
      * @param int|null $time
+     * @return Task
      */
-    public function setTime(?int $time): void
+    public function setTime(?int $time): Task
     {
         $this->time = $time;
+        return $this;
     }
 
     /**
@@ -88,9 +96,31 @@ class Task {
     /**
      * Set the date of Task
      * @param string|null $date
+     * @return Task
      */
-    public function setDate(?string $date): void
+    public function setDate(?string $date): Task
     {
         $this->date = $date;
+        return $this;
+    }
+
+    /**
+     * Return the project fk of Task
+     * @return Project|null
+     */
+    public function getProjectFk(): ?int
+    {
+        return $this->projectFk;
+    }
+
+    /**
+     * Set the project fk of Task
+     * @param Project|null $projectFk
+     * @return Task
+     */
+    public function setProjectFk(?Project $projectFk): Task
+    {
+        $this->projectFk = $projectFk;
+        return $this;
     }
 }

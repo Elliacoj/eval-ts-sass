@@ -5,12 +5,6 @@ require_once "../vendor/autoload.php";
 require_once "../config.php";
 
 use Amaur\EvalTsSass\Controller\UserController;
-use Amaur\EvalTsSass\Entity\User;
-use Amaur\EvalTsSass\Manager\UserManager;
-
-/*$user = new User(null, "amaury.jocaille@hotmail.com", "Azerty1234?");
-$userM = new UserManager();
-$userM->searchUser($user);*/
 
 if(isset($_GET['controller'], $_GET['action']) && $_GET['controller'] === "user") {
     $userController = new UserController();

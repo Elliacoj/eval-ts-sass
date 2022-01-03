@@ -93,6 +93,12 @@ class AddWindow {
         this.buttonAdd.addEventListener("click", () => {
             localStorage.removeItem(remove);
             element.remove();
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("DELETE", "./api/index.php");
+            xhr.responseType = "json";
+            xhr.send(JSON.stringify({type: "project", name: remove}));
+
             this.divContainer.remove();
         });
     }
@@ -134,6 +140,11 @@ class AddWindow {
             if(this.input.value !== "" && !localStorage.getItem(this.input.value)) {
                 let newProject: Project = new Project();
                 localStorage.setItem(this.input.value, JSON.stringify(newProject));
+
+                let xhr = new XMLHttpRequest();
+                xhr.open("POST", "./api/index.php");
+                xhr.responseType = "json";
+                xhr.send(JSON.stringify({type: "project", name: this.input.value, time: 0, date: Date.now()}));
                 this.divContainer.remove();
             }
             else {

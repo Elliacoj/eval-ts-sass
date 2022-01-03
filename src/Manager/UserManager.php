@@ -43,13 +43,25 @@ class UserManager extends Manager {
     }
 
     /**
-     * Search a user and create a session if information is correct
+     * Search a user by mail
      */
     public static function searchUser($mail): ?User {
         $user = R::findOne('elliauser', "mail = ?", [$mail]);
 
         if(!is_null($user)) {
             return new User($user->id, $user->mail,$user->password);
+        }
+        return null;
+    }
+
+    /**
+     * Search a user by id
+     */
+    public static function searchId($id): ?User {
+        $user = R::load('elliauser', $id);
+
+        if(!is_null($user)) {
+            return new User($user->id, $user->mail, $user->password);
         }
         return null;
     }

@@ -2,23 +2,22 @@
 
 namespace Amaur\EvalTsSass\Manager;
 
-use Amaur\EvalTsSass\Entity\Project;
+use Amaur\EvalTsSass\Entity\Task;
 use RedBeanPHP\R;
 use RedBeanPHP\RedException\SQL;
 
-class ProjectManager extends Manager{
-
+class TaskManager {
     /**
      * Add a project into project table
-     * @param Project $project
+     * @param Task $task
      * @return bool
      * @throws SQL
      */
-    public static function addProject(Project $project): bool {
-        $name = $project->getName();
-        $time = $project->getTime();
-        $userFk = $project->getUser()->getId();
-        $date = $project->getDate();
+    public static function addProject(Task $task): bool {
+        $name = $task->getName();
+        $time = $task->getTime();
+        $userFk = $task->getProjectFk()->getId();
+        $date = $task->getDate();
 
         if(!in_array('elliaproject', R::inspect())){
             $table = R::dispense('elliaproject');
@@ -49,29 +48,5 @@ class ProjectManager extends Manager{
                 return false;
             }
         }
-    }
-
-    /**
-     * Delete a project into project table
-     * @param $id
-     */
-    public static function deleteProject($id) {
-        $id = filter_var($id, FILTER_SANITIZE_NUMBER_INT);
-
-        R::trash("elliaproject", $id);
-    }
-
-    /**
-     * Return id or null
-     * @param $name
-     * @return int|null
-     */
-    public static function searchName($name): ?int {
-        $project = R::findOne('elliaproject', "name = ?", [$name]);
-
-        if(!is_null($project)) {
-            return $project->id;
-        }
-        return null;
     }
 }
