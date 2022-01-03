@@ -19,23 +19,25 @@ class TaskManager {
         $projectFk = $task->getProjectFk()->getId();
         $date = $task->getDate();
 
+        $project = R::load("elliaproject", $projectFk);
+
         if(!in_array('elliatask', R::inspect())){
             $table = R::dispense('elliatask');
             $table->name = $name;
             $table->time = $time;
-            $table->projectfk = $projectFk;
+            $table->projectfk = $project;
             $table->date = $date;
 
             R::store($table);
             return true;
         }
         else {
-            $task = R::findOrCreate('elliatask', ['name' => $name, 'projectfk' => $projectFk]);
+            $task = R::findOrCreate('elliatask', ['name' => $name, 'projectfk' => $project]);
 
             if(is_null($task->time)) {
                 $task->name = $name;
                 $task->time = $time;
-                $task->projectfk = $projectFk;
+                $task->projectfk = $project;
                 $task->date = $date;
                 try {
                     R::store($task);
@@ -58,10 +60,10 @@ class TaskManager {
     public static function getAll($idProject):array {
         $allTask = [];
 
-        $tasks = R::find("elliatask", "projectfk= ?", [$idProject]);
+        $tasks = R::find("elliatask", "projectfk_id= ?", [$idProject]);
         if(count($tasks) !== 0) {
             foreach ($tasks as $task) {
-                $allTask[] = new Task($task->id, $task->name, $task->time, $task->date, ProjectManager::searchId($task->projectfk));
+                $allTask[] = new Task($task->id, $task->name, $task->time, $task->date, ProjectManager::searchId($task->projectfk_id));
             }
         }
         return $allTask;
@@ -86,7 +88,7 @@ class TaskManager {
         $task = R::findOne('elliatask', "id = ?", [$id]);
 
         if(!is_null($task)) {
-            return new Task($task->id, $task->name, $task->time, $task->date, ProjectManager::searchId($task->projectfk));
+            return new Task($task->id, $task->name, $task->time, $task->date, ProjectManager::searchId($task->projectfk_id));
         }
         return null;
     }

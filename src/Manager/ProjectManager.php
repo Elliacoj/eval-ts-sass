@@ -20,23 +20,25 @@ class ProjectManager extends Manager{
         $userFk = $project->getUser()->getId();
         $date = $project->getDate();
 
+        $user = R::load("elliauser", $userFk);
+
         if(!in_array('elliaproject', R::inspect())){
             $table = R::dispense('elliaproject');
             $table->name = $name;
             $table->time = $time;
-            $table->userfk = $userFk;
+            $table->userfk = $user;
             $table->date = $date;
 
             R::store($table);
             return true;
         }
         else {
-            $project = R::findOrCreate('elliaproject', ['name' => $name, 'userfk' => $userFk]);
+            $project = R::findOrCreate('elliaproject', ['name' => $name, 'userfk' => $user]);
 
             if(is_null($project->time)) {
                 $project->name = $name;
                 $project->time = $time;
-                $project->userfk = $userFk;
+                $project->userfk = $user;
                 $project->date = $date;
                 try {
                     R::store($project);
@@ -70,7 +72,7 @@ class ProjectManager extends Manager{
         $project = R::findOne('elliaproject', "name = ?", [$name]);
 
         if(!is_null($project)) {
-            return new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk));
+            return new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk_id));
         }
         return null;
     }
@@ -84,7 +86,7 @@ class ProjectManager extends Manager{
         $project = R::findOne('elliaproject', "id = ?", [$id]);
 
         if(!is_null($project)) {
-            return new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk));
+            return new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk_id));
         }
         return null;
     }
@@ -114,10 +116,10 @@ class ProjectManager extends Manager{
     public static function getAll($idUser):array {
         $allProject = [];
 
-        $projects = R::find("elliaproject", "userfk= ?", [$idUser]);
+        $projects = R::find("elliaproject", "userfk_id= ?", [$idUser]);
         if(count($projects) !== 0) {
             foreach ($projects as $project) {
-                $allProject[] = new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk));
+                $allProject[] = new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk_id));
             }
         }
         return $allProject;
