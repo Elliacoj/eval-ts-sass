@@ -1,7 +1,9 @@
 <?php
 
 use Amaur\EvalTsSass\Entity\Project;
+use Amaur\EvalTsSass\Entity\Task;
 use Amaur\EvalTsSass\Manager\ProjectManager;
+use Amaur\EvalTsSass\Manager\TaskManager;
 use Amaur\EvalTsSass\Manager\UserManager;
 
 header('Content-Type: application/json');
@@ -35,6 +37,12 @@ function add($data) {
         $project->setName($data->name)->setTime($data->time)->setDate($data->date)->setUser(UserManager::searchId($_SESSION['id']));
         ProjectManager::addProject($project);
     }
+    elseif ($data->type === "task") {
+        $task = new Task();
+
+        $task->setName($data->name)->setTime($data->time)->setDate($data->date)->setProjectFk(ProjectManager::searchName($data->nameProject));
+        TaskManager::addTask($task);
+    }
 }
 
 /**
@@ -43,6 +51,6 @@ function add($data) {
  */
 function delete($data) {
     if($data->type === "project") {
-        ProjectManager::deleteProject(ProjectManager::searchName($data->name));
+        ProjectManager::deleteProject((ProjectManager::searchName($data->name))->getId());
     }
 }

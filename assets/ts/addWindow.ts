@@ -164,6 +164,12 @@ class AddWindow {
 
             newProject.addTask(task);
             localStorage.setItem(name, JSON.stringify(newProject));
+
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "./api/index.php");
+            xhr.responseType = "json";
+            xhr.send(JSON.stringify({type: "task", name: this.input.value, time: 0, date: (new Date()).toLocaleDateString(), nameProject: name}));
+
             this.divContainer.remove();
         }
     }

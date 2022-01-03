@@ -66,11 +66,12 @@ class ProjectManager extends Manager{
      * @param $name
      * @return int|null
      */
-    public static function searchName($name): ?int {
+    public static function searchName($name): ?Project {
         $project = R::findOne('elliaproject', "name = ?", [$name]);
 
         if(!is_null($project)) {
-            return $project->id;
+
+            return new Project($project->id, $project->name, $project->time, $project->date, UserManager::searchId($project->userfk));
         }
         return null;
     }

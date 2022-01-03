@@ -108,7 +108,7 @@ class Task {
      * Return the project fk of Task
      * @return Project|null
      */
-    public function getProjectFk(): ?int
+    public function getProjectFk(): ?Project
     {
         return $this->projectFk;
     }

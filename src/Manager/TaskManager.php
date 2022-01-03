@@ -8,37 +8,37 @@ use RedBeanPHP\RedException\SQL;
 
 class TaskManager {
     /**
-     * Add a project into project table
+     * Add a task into task table
      * @param Task $task
      * @return bool
      * @throws SQL
      */
-    public static function addProject(Task $task): bool {
+    public static function addTask(Task $task): bool {
         $name = $task->getName();
         $time = $task->getTime();
-        $userFk = $task->getProjectFk()->getId();
+        $projectFk = $task->getProjectFk()->getId();
         $date = $task->getDate();
 
-        if(!in_array('elliaproject', R::inspect())){
-            $table = R::dispense('elliaproject');
+        if(!in_array('elliatask', R::inspect())){
+            $table = R::dispense('elliatask');
             $table->name = $name;
             $table->time = $time;
-            $table->userfk = $userFk;
+            $table->projectfk = $projectFk;
             $table->date = $date;
 
             R::store($table);
             return true;
         }
         else {
-            $project = R::findOrCreate('elliaproject', ['name' => $name, 'userfk' => $userFk]);
+            $task = R::findOrCreate('elliatask', ['name' => $name, 'projectfk' => $projectFk]);
 
-            if(is_null($project->time)) {
-                $project->name = $name;
-                $project->time = $time;
-                $project->userfk = $userFk;
-                $project->date = $date;
+            if(is_null($task->time)) {
+                $task->name = $name;
+                $task->time = $time;
+                $task->projectfk = $projectFk;
+                $task->date = $date;
                 try {
-                    R::store($project);
+                    R::store($task);
                 }
                 catch (SQL $e) {}
 
